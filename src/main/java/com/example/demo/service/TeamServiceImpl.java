@@ -28,6 +28,26 @@ public class TeamServiceImpl implements  TeamService{
         return true;
     }
 
+    @Override
+    public List<Team>  getAllTeams() {
+        return teamRepo.findAll();
+    }
+
+    @Override
+    public Optional<Team> getTeam(Long id){
+        return teamRepo.findById(id);
+    }
+
+    @Override
+    public boolean deleteTeam(Long id){
+        Optional<Team> teamOptional = teamRepo.findById(id);
+        if(teamOptional.isPresent()){
+            teamRepo.delete(teamOptional.get());
+            return true;
+        }
+        return false;
+    }
+
 
 }
 

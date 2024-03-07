@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.apiRequest.CreateMatchData;
+import com.example.demo.apiRequest.OverStats;
 import com.example.demo.apiRequest.ScoreBoard;
 import com.example.demo.entity.*;
 import com.example.demo.repo.*;
@@ -148,25 +149,43 @@ public class MatchServiceImpl  implements MatchService {
         return scoreBoard;
     }
 
+    @Override
+    public List<OverStats> getOverStats(Long teamId, Long matchId) {
+        List<OverStats> overStatsList = new ArrayList<>();
+        List<Object[]> tempStats = matchStatsRepo.findStatsByTeamId(teamId,matchId);
+
+        for (Object[] row : tempStats) {
+            OverStats overStats = new OverStats();
+
+            overStats.setOverNum((Integer) row[0]);
+            overStats.setScore(((Number) row[1]).intValue());
+            overStats.setWicket(((Number) row[2]).intValue());
+
+            overStatsList.add(overStats);
+        }
+        return overStatsList;
+
+    }
+
 
     int startInnings(MatchDtls match, List<Playing11> batTeam, List<Playing11> ballTeam, Long matchId,Long atBatTeam) {
        int score = 0;
        int wicket = 0;
 
-       Long atBat = batTeam.remove(batTeam.size()-1).getId();
-       Long atNonBat = batTeam.remove(batTeam.size()-1).getId();
+       Long atBat = batTeam.remove(batTeam.size()-1).getPlayerID();
+       Long atNonBat = batTeam.remove(batTeam.size()-1).getPlayerID();
        int numberOfOvers = match.getNumberOfovers();
        for(int i=1;i<=numberOfOvers;i++){
-           Long atBall = ballTeam.get((i-1)%ballTeam.size()).getId();
+           Long atBall = ballTeam.get((i-1)%ballTeam.size()).getPlayerID();
            for(int j=1;j<=6;j++){
                int run = getRandom();
                storeOutCome(atBat,atBall,matchId,i,j,run,atBatTeam);
                if(run==7){
-                   atBat = batTeam.remove(batTeam.size()-1).getId();
                    wicket++;
-                   if(batTeam.size()<=1 || wicket>=10){
+                   if(batTeam.size()<=0 || wicket>=10){
                        return score;
                    }
+                   atBat = batTeam.remove(batTeam.size()-1).getPlayerID();
                }else if(run%2!=0){
                    Long t = atNonBat;
                    atNonBat = atBat;

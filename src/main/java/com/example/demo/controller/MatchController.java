@@ -1,10 +1,13 @@
 package com.example.demo.controller;
 
 import com.example.demo.apiRequest.CreateMatchData;
+import com.example.demo.apiRequest.OverStats;
 import com.example.demo.apiRequest.ScoreBoard;
 import com.example.demo.service.MatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/match")
@@ -32,6 +35,13 @@ public class MatchController {
     public ScoreBoard getScoreBoard(@RequestParam Long matchId){
         return matchService.getScoreBoard(matchId);
     }
+
+    @GetMapping("/oversStats")
+    public List<OverStats> getOverStats(@RequestParam Long teamId, Long matchId){
+
+        return matchService.getOverStats(teamId,matchId);
+    }
+
 
 
 }

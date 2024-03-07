@@ -11,7 +11,11 @@ public interface PlayerService {
 
     public boolean createPlayer(PlayerDTO player);
 
+    public Player showPlayer(Long id);
 
+    public List<Player> getAllPlayers();
+
+    public boolean deletePlayer(Long id);
 
 
 }

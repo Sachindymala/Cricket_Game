@@ -34,5 +34,29 @@ public class PlayerServiceImpl implements  PlayerService{
         return true;
     }
 
+    @Override
+    public Player showPlayer(Long id) {
+         Optional<Player> playerOptional = playerRepo.findById(id);
+         Player player = new Player();
+         if (playerOptional.isPresent()){
+             player = playerOptional.get();
 
+         }
+        return player;
+    }
+
+    @Override
+    public List<Player> getAllPlayers(){
+        return playerRepo.findAll();
+    }
+
+    @Override
+    public boolean deletePlayer(Long id){
+        Optional<Player> playerOptional = playerRepo.findById(id);
+        if(playerOptional.isPresent()){
+            playerRepo.delete(playerOptional.get());
+            return true;
+        }
+        return false;
+    }
 }

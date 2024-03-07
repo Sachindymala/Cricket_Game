@@ -21,4 +21,18 @@ public class TeamController {
         return teamService.createTeam(team);
     }
 
+    @GetMapping("/team")
+    public Optional<Team> getTeam(@RequestParam Long id){
+        return teamService.getTeam(id);
+    }
+
+    @GetMapping("/allTeam")
+    public List<Team> getAllTeams(){
+        return teamService.getAllTeams();
+    }
+
+    @DeleteMapping("/team")
+    public boolean deleteTeam(@RequestParam Long id){
+        return teamService.deleteTeam(id);
+    }
 }

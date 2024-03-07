@@ -13,11 +13,15 @@ import java.util.List;
 public interface MatchStatsRepo extends JpaRepository<MatchStats, Long> {
 
 
-    @Query("SELECT ms.atBat,SUM(ms.score)  FROM MatchStats ms WHERE ms.overNum = :overNum AND ms.teamId = :teamId AND ms.matchID = :matchID GROUP BY ms.atBat")
-    List<Object[]> findScoreByOverNumAndTeamId(@Param("overNum") int overNum, @Param("teamId") Long teamId,@Param("matchID") Long matchID);
+   // @Query("SELECT ms.atBat,SUM(ms.score)  FROM MatchStats ms WHERE ms.overNum = :overNum AND ms.teamId = :teamId AND ms.matchID = :matchID GROUP BY ms.atBat")
+    @Query("SELECT ms.overNum,SUM(ms.score),SUM(ms.wicket) FROM MatchStats ms WHERE ms.teamId = :teamId AND ms.matchID = :matchID GROUP BY ms.overNum")
+    List<Object[]> findStatsByTeamId(@Param("teamId") Long teamId,@Param("matchID") Long matchID);
+
 
     @Query("SELECT SUM(ms.score)  FROM MatchStats ms WHERE ms.teamId = :teamId AND ms.matchID = :matchID")
     Integer findScoreByTeamId( @Param("teamId") Long teamId,@Param("matchID") Long matchID);
+
+
 
 
 
