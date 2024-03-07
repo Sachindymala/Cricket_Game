@@ -13,17 +13,17 @@ import java.util.*;
 public class MatchServiceImpl  implements MatchService {
 
     @Autowired
-    MatchRepo matchRepo;
+    private MatchRepo matchRepo;
     @Autowired
-    MatchStatsRepo matchStatsRepo;
+    private MatchStatsRepo matchStatsRepo;
     @Autowired
-    TeamRepository teamRepo;
+    private TeamRepository teamRepo;
     @Autowired
-    PlayerRepository playerRepository;
+    private PlayerRepository playerRepository;
     @Autowired
-    Playing11Repo playing11Repo;
+    private Playing11Repo playing11Repo;
     @Autowired
-    Playing11Repo playing11Repository;
+    private Playing11Repo playing11Repository;
 
     @Override
     public Long createMatch(CreateMatchData matchData){
@@ -106,10 +106,13 @@ public class MatchServiceImpl  implements MatchService {
             List<Playing11> team1 = playing11Repository.findByTeamIdAndMatchId(teams[0], matchID);
             List<Playing11> team2 = playing11Repository.findByTeamIdAndMatchId(teams[1], matchID);
 
+            List<Playing11> team1SecondInn = new ArrayList<>(team2);
+            List<Playing11> team2SecondInn = new ArrayList<>(team1);
+
             teamScore[0] =
-                    startInnings(match, team1, team2, matchID);
+                    startInnings(match, team1, team2, matchID,teams[0]);
             teamScore[1] =
-                    startInnings(match, team2, team1, matchID);
+                    startInnings(match, team1SecondInn, team2SecondInn, matchID,teams[1]);
             Long victorID ;
             if (teamScore[0] > teamScore[1]) {
                 victorID = teams[0];
@@ -126,12 +129,27 @@ public class MatchServiceImpl  implements MatchService {
 
     @Override
     public ScoreBoard getScoreBoard(Long matchId) {
+        ScoreBoard scoreBoard = new ScoreBoard();
 
-        return null;
+        Optional<MatchDtls> optionalMatchDtls = matchRepo.findById(matchId);
+        if(optionalMatchDtls.isPresent()){
+            MatchDtls matchDtls = optionalMatchDtls.get();
+            scoreBoard.setTeam1ID(matchDtls.getTeam1ID());
+            scoreBoard.setTeam1Score(matchStatsRepo.findScoreByTeamId( scoreBoard.getTeam1ID(),matchId));
+            scoreBoard.setTeam2ID(matchDtls.getTeam2ID());
+            scoreBoard.setTeam2Score(matchStatsRepo.findScoreByTeamId( scoreBoard.getTeam2ID(),matchId));
+            Optional<Team> optionalTeam = teamRepo.findById(matchDtls.getVictor());
+            if(optionalTeam.isPresent()){
+                scoreBoard.setWinner(optionalTeam.get().getTeamName());
+            }
+        }else{
+            scoreBoard.setDiscription("Pls pass valid Match id");
+        }
+        return scoreBoard;
     }
 
 
-    int startInnings(MatchDtls match, List<Playing11> batTeam, List<Playing11> ballTeam, Long matchId) {
+    int startInnings(MatchDtls match, List<Playing11> batTeam, List<Playing11> ballTeam, Long matchId,Long atBatTeam) {
        int score = 0;
        int wicket = 0;
 
@@ -142,7 +160,7 @@ public class MatchServiceImpl  implements MatchService {
            Long atBall = ballTeam.get((i-1)%ballTeam.size()).getId();
            for(int j=1;j<=6;j++){
                int run = getRandom();
-               storeOutCome(atBat,atBall,matchId,i,j,run);
+               storeOutCome(atBat,atBall,matchId,i,j,run,atBatTeam);
                if(run==7){
                    atBat = batTeam.remove(batTeam.size()-1).getId();
                    wicket++;
@@ -167,13 +185,14 @@ public class MatchServiceImpl  implements MatchService {
    }
 
 
-    private void storeOutCome(Long atBat, Long atBall, Long matchId, int i, int j, int run) {
+    private void storeOutCome(Long atBat, Long atBall, Long matchId, int i, int j, int run,long teamId) {
         MatchStats matchStats = new MatchStats();
         matchStats.setMatchID(matchId);
         matchStats.setAtBall(atBall);
         matchStats.setAtBat(atBat);
         matchStats.setOverNum(i);
         matchStats.setBallNum(j);
+        matchStats.setTeamId(teamId);
         if(run==7){
             matchStats.setScore(0);
             matchStats.setWicket(1);

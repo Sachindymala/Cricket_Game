@@ -11,10 +11,7 @@ public interface PlayerService {
 
     public boolean createPlayer(PlayerDTO player);
 
-    public Optional<Player> showPlayer(Long id);
 
-    public List<Player> getAllPlayers();
 
-    public boolean deletePlayer(Long id);
 
 }

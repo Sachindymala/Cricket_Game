@@ -10,11 +10,6 @@ public interface TeamService {
 
     public boolean createTeam(TeamDTO team);
 
-    public List<Team> getAllTeams();
-
-    public Optional<Team> getTeam(Long id);
-
-    public boolean deleteTeam(Long id);
 
 
 }

@@ -13,7 +13,7 @@ public class MatchController {
     @Autowired
     MatchService matchService;
 
-    @PostMapping("/createMatch")
+    @PostMapping("/match")
     public long createMatch(@RequestBody CreateMatchData matchData) {
         return matchService.createMatch(matchData);
     }
@@ -32,5 +32,6 @@ public class MatchController {
     public ScoreBoard getScoreBoard(@RequestParam Long matchId){
         return matchService.getScoreBoard(matchId);
     }
+
 
 }

@@ -21,19 +21,7 @@ public class PlayerController {
         return playerService.createPlayer(playerDTO);
     }
 
-    @GetMapping("/player")
-    public Optional<Player> getPlayers(@RequestParam Long id){
-        return playerService.showPlayer(id);
-    }
 
-    @GetMapping("/allPlayers")
-    public List<Player> getAllPlayers(){
-        return playerService.getAllPlayers();
-    }
 
-    @DeleteMapping("/player")
-    public boolean deletePlayer(@RequestParam Long id){
-        return playerService.deletePlayer(id);
-    }
 
 }

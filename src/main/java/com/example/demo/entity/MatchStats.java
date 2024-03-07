@@ -22,5 +22,6 @@ public class MatchStats {
     private int wicket;
     private Long  atBat;
     private Long atBall;
+    private Long teamId;
 
 }

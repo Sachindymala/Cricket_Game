@@ -16,9 +16,9 @@ import java.util.Optional;
 public class PlayerServiceImpl implements  PlayerService{
 
     @Autowired
-    PlayerRepository playerRepo;
+    private PlayerRepository playerRepo;
     @Autowired
-    TeamRepository teamRepository;
+    private TeamRepository teamRepository;
 
     @Override
     public boolean createPlayer(PlayerDTO playerDTO) {
@@ -34,24 +34,5 @@ public class PlayerServiceImpl implements  PlayerService{
         return true;
     }
 
-    @Override
-    public Optional<Player> showPlayer(Long id) {
-        return playerRepo.findById(id);
-    }
-
-    @Override
-    public List<Player> getAllPlayers(){
-        return playerRepo.findAll();
-    }
-
-    @Override
-    public boolean deletePlayer(Long id){
-        Optional<Player> playerOptional = playerRepo.findById(id);
-        if(playerOptional.isPresent()){
-            playerRepo.delete(playerOptional.get());
-            return true;
-        }
-        return false;
-    }
 
 }
