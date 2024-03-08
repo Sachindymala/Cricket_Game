@@ -1,8 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.apiRequest.CreateMatchData;
-import com.example.demo.apiRequest.OverStats;
-import com.example.demo.apiRequest.ScoreBoard;
+import com.example.demo.apiRequest.*;
+import com.example.demo.entity.MatchDtls;
 import com.example.demo.service.MatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,13 +15,13 @@ public class MatchController {
     @Autowired
     MatchService matchService;
 
-    @PostMapping("/match")
-    public long createMatch(@RequestBody CreateMatchData matchData) {
+    @PostMapping()
+    public MatchCreationResponse createMatch(@RequestBody CreateMatchData matchData) {
         return matchService.createMatch(matchData);
     }
 
     @GetMapping("/toss")
-    public long getTossMatch(@RequestParam Long matchId) {
+    public TossResult getTossMatch(@RequestParam Long matchId) {
         return matchService.startToss(matchId);
     }
 
@@ -38,7 +37,6 @@ public class MatchController {
 
     @GetMapping("/oversStats")
     public List<OverStats> getOverStats(@RequestParam Long teamId, Long matchId){
-
         return matchService.getOverStats(teamId,matchId);
     }
 

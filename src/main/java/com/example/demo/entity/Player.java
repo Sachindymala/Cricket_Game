@@ -19,11 +19,13 @@ public class Player {
     private String playerName;
 
     @Column(name = "PlayerType")
-    private String playerType;
+    private Enum<PlayerType> playerType;
 
     @ManyToOne
     private Team team;
 
 }
+
+
 
 

@@ -20,5 +20,4 @@ public class Team {
     @Column(name = "TeamName")
      private String  teamName;
 
-
 }

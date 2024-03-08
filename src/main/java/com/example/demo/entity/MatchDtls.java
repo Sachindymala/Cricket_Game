@@ -13,13 +13,13 @@ public class MatchDtls {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long matchId;
     private String matchName;
-    private String Venue;
+    private String venue;
     private Date date;
     private Long team1ID;
     private Long team2ID;
-    private int numberOfovers;
-    private Long toss;
-    private Long victor;
+    private int numberOfOvers;
+    private Long tossWinner;
+    private Long winner;
 
 
 //    @OneToMany(mappedBy = "match", cascade = CascadeType.ALL)

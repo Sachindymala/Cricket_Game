@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import com.example.demo.apiRequest.PlayerDTO;
 import com.example.demo.entity.Player;
 import com.example.demo.entity.Team;
@@ -9,8 +8,9 @@ import com.example.demo.repo.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import javax.naming.LinkLoopException;
+import javax.validation.Valid;
+import java.util.*;
 
 @Service
 public class PlayerServiceImpl implements  PlayerService{
@@ -21,7 +21,7 @@ public class PlayerServiceImpl implements  PlayerService{
     private TeamRepository teamRepository;
 
     @Override
-    public boolean createPlayer(PlayerDTO playerDTO) {
+    public Player createPlayer(PlayerDTO playerDTO) {
       Player player = new Player();
       player.setPlayerType(playerDTO.getPlayerType());
       player.setPlayerName(playerDTO.getPlayerName());
@@ -30,8 +30,7 @@ public class PlayerServiceImpl implements  PlayerService{
             Optional<Team> teamOptional = teamRepository.findById(playerDTO.getTeamId());
             teamOptional.ifPresent(player::setTeam);
         }
-        playerRepo.save(player);
-        return true;
+        return playerRepo.save(player);
     }
 
     @Override
@@ -51,12 +50,42 @@ public class PlayerServiceImpl implements  PlayerService{
     }
 
     @Override
-    public boolean deletePlayer(Long id){
+    public String deletePlayer(Long id){
         Optional<Player> playerOptional = playerRepo.findById(id);
         if(playerOptional.isPresent()){
             playerRepo.delete(playerOptional.get());
-            return true;
+            return "Player Deleted Successfully.";
         }
-        return false;
+        return "Player does not exist.";
+    }
+
+    @Override
+    public List<Player> saveAllPlayers(List<PlayerDTO> playerDTOList) {
+        List<Player> playerList = new ArrayList<>();
+        Map<Long,Team> teamCache = new HashMap<>();
+        for(PlayerDTO playerDTO : playerDTOList) {
+            Player player = new Player();
+            player.setPlayerType(playerDTO.getPlayerType());
+            player.setPlayerName(playerDTO.getPlayerName());
+
+            if (playerDTO.getTeamId() != null) {
+                if(!teamCache.containsKey(playerDTO.getTeamId())){
+                    Optional<Team> teamOptional = teamRepository.findById(playerDTO.getTeamId());
+                    if (teamOptional.isPresent()) {
+                        teamCache.put(playerDTO.getTeamId(),teamOptional.get());
+                    }else{
+                        continue;
+                    }
+                }
+                player.setTeam(teamCache.get(playerDTO.getTeamId()));
+                playerList.add(player);
+            }
+        }
+        return playerRepo.saveAll(playerList);
+    }
+
+    @Override
+    public List<Long> getPlayerIds(Long teamId) {
+        return playerRepo.findPlayerIdByTeamId(teamId);
     }
 }

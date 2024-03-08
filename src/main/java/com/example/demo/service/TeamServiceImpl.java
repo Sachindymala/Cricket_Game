@@ -1,14 +1,13 @@
 package com.example.demo.service;
 
 import com.example.demo.apiRequest.TeamDTO;
-import com.example.demo.entity.Player;
 import com.example.demo.entity.Team;
 import com.example.demo.repo.PlayerRepository;
 import com.example.demo.repo.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -21,11 +20,10 @@ public class TeamServiceImpl implements  TeamService{
     private PlayerRepository playerRepository;
 
     @Override
-    public boolean createTeam(TeamDTO teamDTO) {
+    public Team createTeam(TeamDTO teamDTO) {
         Team team = new Team();
         team.setTeamName(teamDTO.getName());
-        teamRepo.save(team);
-        return true;
+        return teamRepo.save(team);
     }
 
     @Override
@@ -39,16 +37,14 @@ public class TeamServiceImpl implements  TeamService{
     }
 
     @Override
-    public boolean deleteTeam(Long id){
+    public String deleteTeam(Long id){
         Optional<Team> teamOptional = teamRepo.findById(id);
         if(teamOptional.isPresent()){
             teamRepo.delete(teamOptional.get());
-            return true;
+            return "Team Deleted Successfully.";
         }
-        return false;
+        return "Team does not exist.";
     }
-
-
 }
 
 

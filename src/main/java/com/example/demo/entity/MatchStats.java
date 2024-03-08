@@ -14,14 +14,15 @@ public class MatchStats {
 
     @Id
     @GeneratedValue
-    private Long matchStatsID;
+    private Long matchStatsId;
     private Long matchID;
     private int overNum;
     private  int ballNum;
-    private  int score;
+    private  int runs;
     private int wicket;
-    private Long  atBat;
-    private Long atBall;
+    private Long batsmenPlayerId;
+    private Long bowlerPlayerId;
     private Long teamId;
+
 
 }

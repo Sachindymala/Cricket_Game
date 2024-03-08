@@ -13,6 +13,6 @@ public class Playing11 {
 
     private Long teamId;
     private Long matchId;
-    private Long playerID;
+    private Long playerId;
 
 }

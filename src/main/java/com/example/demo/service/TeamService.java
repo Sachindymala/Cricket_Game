@@ -8,13 +8,13 @@ import java.util.Optional;
 
 public interface TeamService {
 
-    public boolean createTeam(TeamDTO team);
+    public Team createTeam(TeamDTO team);
 
     public List<Team> getAllTeams();
 
     public Optional<Team> getTeam(Long id);
 
-    public boolean deleteTeam(Long id);
+    public String deleteTeam(Long id);
 
 
 }

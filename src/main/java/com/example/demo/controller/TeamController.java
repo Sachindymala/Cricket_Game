@@ -17,7 +17,7 @@ public class TeamController {
     private TeamService teamService;
 
     @PostMapping("/team")
-    public boolean crateTeam(@RequestBody TeamDTO team){
+    public Team crateTeam(@RequestBody TeamDTO team){
         return teamService.createTeam(team);
     }
 
@@ -32,7 +32,7 @@ public class TeamController {
     }
 
     @DeleteMapping("/team")
-    public boolean deleteTeam(@RequestParam Long id){
+    public String deleteTeam(@RequestParam Long id){
         return teamService.deleteTeam(id);
     }
 }
